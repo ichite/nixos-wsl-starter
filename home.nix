@@ -24,6 +24,7 @@
     killall
     lunarvim
     mosh
+    mc
     neovim
     procs
     ripgrep
@@ -38,30 +39,45 @@
 
   stable-packages = with pkgs; [
     # FIXME: customize these stable packages to your liking for the languages that you use
-
     # key tools
     gh # for bootstrapping
     just
-
     # core languages
     rustup
     go
     lua
     nodejs
-    python3
-    typescript
+    (python311.withPackages(ps: with ps; [
+  toml
+  python-lsp-server
+  pyls-isort
+  pynvim
+  pandas
+  numpy
+  geopandas
+  gdal
+  cartopy
+  rasterio
+  scipy
+  xarray
+  scikit-learn
+  statsmodels
+  poetry-core
+  plotext
+  matplotlib
+  seaborn
+  jupyter
+]))
 
+    typescript
     # rust stuff
     cargo-cache
     cargo-expand
-
     # local dev stuf
     mkcert
     httpie
-
     # treesitter
     tree-sitter
-
     # language servers
     ccls # c / c++
     gopls
@@ -71,7 +87,6 @@
     sumneko-lua-language-server
     nil # nix
     nodePackages.pyright
-
     # formatters and linters
     alejandra # nix
     black # python
@@ -115,6 +130,12 @@ in {
   # FIXME: if you want to version your LunarVim config, add it to the root of this repo and uncomment the next line
   # home.file.".config/lvim/config.lua".source = ./lvim_config.lua;
 
+  # fix for Git tree is dirty”
+  nix.extraOptions = ''
+  experimental-features = nix-command flakes
+  warn-dirty = false
+''; 
+  #
   programs = {
     home-manager.enable = true;
     nix-index.enable = true;
